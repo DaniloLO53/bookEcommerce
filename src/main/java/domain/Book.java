@@ -9,5 +9,4 @@ public class Book extends Product {
     public double calculateTax() {
         return this.price * 0.1;
     }
-
 }
