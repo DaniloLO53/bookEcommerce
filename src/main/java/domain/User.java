@@ -1,30 +1,38 @@
 package domain;
 
 public class User {
+    private Integer id;
     private String email;
     private String firstName;
     private String lastName;
     private String password;
 
-    public User(String email, String firstName, String lastName, String password) {
+    private User(Integer id, String email, String firstName, String lastName, String password) {
+        this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
     }
 
-    static public UserBuilder builder() {
+    public static UserBuilder builder() {
         return new UserBuilder();
     }
 
     public static class UserBuilder {
+        private Integer id;
         private String email;
         private String firstName;
         private String lastName;
         private String password;
 
+        public UserBuilder id(Integer id) {
+            this.id = id;
+            return this;
+        }
+
         public User build() {
-            return new User(email, firstName, lastName, password);
+            return new User(id, email, firstName, lastName, password);
         }
 
         public UserBuilder email(String email) {
@@ -46,6 +54,12 @@ public class User {
             this.password = password;
             return this;
         }
+
+
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getEmail() {

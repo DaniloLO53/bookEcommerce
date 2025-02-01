@@ -5,11 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnector {
-    static final String JDBC_URL = "jdbc:postgresql://localhost:5432/olx_pirata";
-    static final String user = "postgres";
-    static final String password = "1281";
+    static private final String JDBC_URL = "jdbc:postgresql://localhost:5432/olx_pirata";
+    static private final String USER = "postgres";
+    static private final String PASSWORD = "1281";
 
     public static Connection connect() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, user, password);
+        return DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
     }
 }

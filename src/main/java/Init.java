@@ -1,7 +1,5 @@
 import domain.User;
-import repository.UserRepository;
-
-import java.sql.Connection;
+import service.UserService;
 
 public class Init {
     public static void main(String[] args) {
@@ -11,7 +9,6 @@ public class Init {
                 .lastName("L.")
                 .password("123")
                 .build();
-//        UserRepository.save(user);
-        UserRepository.findAll();
+        UserService.findByEmail(user.getEmail()).stream().map(User::getFirstName).forEach(System.out::println);
     }
 }
