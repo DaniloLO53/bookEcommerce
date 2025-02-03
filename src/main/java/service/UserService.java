@@ -12,4 +12,8 @@ public class UserService {
         users.forEach(u -> System.out.printf("ID: %s | EMAIL: %s | FIRST NAME: %s | LAST NAME: %s | PASSWORD: %s%n",
                 u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(), u.getPassword()));
     }
+
+    public static void deleteById(Integer id) {
+        UserRepository.deleteById(id);
+    }
 }
