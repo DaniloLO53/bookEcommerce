@@ -8,14 +8,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
+    public static void save(User user) {
+        String query = "INSERT INTO users(email, first_name, last_name, password) VALUES(?, ?, ?, ?)";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setString(4, user.getPassword());
+
+            Integer rowsAffected = preparedStatement.executeUpdate();
+
+            System.out.println(rowsAffected + " users created successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void deleteById(Integer id) {
         String query = "DELETE FROM users WHERE id = ?";
-
-        User user = findById(id);
-
-        if (user == null) {
-            System.out.println("No users found with this id");
-        }
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -36,6 +49,26 @@ public class UserRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(query);
         ) {
             preparedStatement.setInt(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return buildUserByResultSet(resultSet);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static User findByEmail(String email) {
+        String query = "SELECT * FROM users WHERE email = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
+            preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     return buildUserByResultSet(resultSet);

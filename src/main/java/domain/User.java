@@ -7,12 +7,16 @@ public class User {
     private String lastName;
     private String password;
 
-    public User(Integer id, String email, String firstName, String lastName, String password) {
-        this.id = id;
+    public User(String email, String firstName, String lastName, String password) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+    }
+
+    public User(Integer id, String email, String firstName, String lastName, String password) {
+        this(email, firstName, lastName, password);
+        this.id = id;
     }
 
     public static class UserBuilder {
