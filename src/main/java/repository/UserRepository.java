@@ -27,7 +27,7 @@ public class UserRepository {
         }
     }
 
-    public static void deleteById(Integer id) {
+    public static void delete(Integer id) {
         String query = "DELETE FROM users WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -40,6 +40,30 @@ public class UserRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static User update(User user, Integer id) {
+        String query = "UPDATE users SET email = ?, first_name = ?, last_name = ?, password = ? WHERE id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setString(4, user.getPassword());
+            preparedStatement.setInt(5, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return buildUserByResultSet(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static User findById(Integer id) {
