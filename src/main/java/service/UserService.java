@@ -1,6 +1,8 @@
 package service;
 
 import domain.User;
+import httpServer.HttpStatusCode;
+import httpServer.errors.HttpException;
 import repository.UserRepository;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class UserService {
         User userFromDatabase = UserRepository.findByEmail(user.getEmail());
 
         if (userFromDatabase != null) {
-            System.out.println("User with this email already exist");
+            throw new HttpException(HttpStatusCode.CONFLICT, "User with this email already exist");
         } else {
             UserRepository.save(user);
         }

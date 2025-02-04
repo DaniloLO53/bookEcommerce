@@ -2,7 +2,9 @@ package httpServer;
 
 public enum HttpStatusCode {
     OK(200),
-    CREATED(201);
+    CREATED(201),
+    NOT_FOUND(400),
+    CONFLICT(409);
 
     private final int code;
 

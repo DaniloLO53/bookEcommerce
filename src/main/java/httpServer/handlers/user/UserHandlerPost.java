@@ -27,18 +27,22 @@ public class UserHandlerPost {
             Gson gson = new Gson();
             User newUser = gson.fromJson(bufferedReader, User.class);
 
-            UserService.save(newUser);
+            try {
+                UserService.save(newUser);
+                sendResponse(exchange, HttpStatusCode.CREATED, "CREATED");
+            } catch (RuntimeException e) {
+                sendResponse(exchange, HttpStatusCode.CONFLICT, e.getMessage());
+                System.out.println(e.getMessage());
+            }
 
-            sendResponse(exchange, HttpStatusCode.CREATED);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void sendResponse(HttpExchange exchange, HttpStatusCode statusCode) {
+    public static void sendResponse(HttpExchange exchange, HttpStatusCode statusCode, String responseBody) {
         Headers responseHeaders = exchange.getResponseHeaders();
         responseHeaders.set("Content-Type", "text/html; charset=UTF_8");
-        String responseBody = "CREATED";
         byte[] responseBodyBytes = responseBody.getBytes(StandardCharsets.UTF_8);
 
         try {
@@ -49,7 +53,5 @@ public class UserHandlerPost {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }
