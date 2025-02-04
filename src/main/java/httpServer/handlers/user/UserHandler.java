@@ -9,7 +9,8 @@ import java.io.IOException;
 public class UserHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        String requestPath = exchange.getRequestURI().getPath();
+        String requestPath = exchange.getRequestURI().getPath().replaceAll("/$", "");
+        System.out.println("Request path: " + requestPath);
         String requestMethod = exchange.getRequestMethod();
 
         switch (requestMethod) {
