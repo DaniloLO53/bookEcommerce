@@ -1,4 +1,4 @@
-package httpServer.handlers.user.get;
+package httpServer.handlers.user;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;

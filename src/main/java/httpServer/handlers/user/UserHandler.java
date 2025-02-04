@@ -2,7 +2,6 @@ package httpServer.handlers.user;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import httpServer.handlers.user.get.UserHandlerGet;
 
 import java.io.IOException;
 
@@ -10,7 +9,6 @@ public class UserHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String requestPath = exchange.getRequestURI().getPath().replaceAll("/$", "");
-        System.out.println("Request path: " + requestPath);
         String requestMethod = exchange.getRequestMethod();
 
         switch (requestMethod) {
@@ -18,7 +16,7 @@ public class UserHandler implements HttpHandler {
                 UserHandlerGet.handle(exchange, requestPath);
                 break;
             case "POST":
-                // todo
+                UserHandlerPost.handle(exchange, requestPath);
                 break;
             case "UPDATE":
                 // todo
