@@ -11,16 +11,14 @@ import service.UserService;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class UserHandlerPost {
+public class UserHandlerUpdate {
     public static void handle(HttpExchange exchange, String requestPath) {
-        System.out.println("Request path: " + requestPath);
-
-        if (requestPath.equals("/users")) {
-            create(exchange);
+        if (requestPath.matches("^/users/\\d+$")) {
+            update(exchange, requestPath.split("/")[2]);
         }
     }
 
-    public static void create(HttpExchange exchange) {
+    public static void update(HttpExchange exchange, String id) {
         Headers responseHeaders = exchange.getResponseHeaders();
         responseHeaders.set("Content-Type", "text/html; charset=UTF_8");
 
@@ -29,30 +27,30 @@ public class UserHandlerPost {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
             Gson gson = new Gson();
-            User newUser = gson.fromJson(bufferedReader, User.class);
+            User updatedUser = gson.fromJson(bufferedReader, User.class);
 
             try {
-                UserService.save(newUser);
-                sendResponse(exchange, HttpStatusCode.CREATED, "CREATED");
+                User newUser = UserService.update(updatedUser, Integer.valueOf(id));
+                Gson newGson = new Gson();
+                String newUserString = newGson.toJson(newUser);
+                sendResponse(exchange, HttpStatusCode.CREATED, newUserString);
             } catch (HttpException e) {
                 e.printStackTrace();
                 sendResponse(exchange, e.getStatusCode(), e.getMessage());
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void sendResponse(HttpExchange exchange, HttpStatusCode statusCode, String responseBody) {
-        Headers responseHeaders = exchange.getResponseHeaders();
-        responseHeaders.set("Content-Type", "text/html; charset=UTF_8");
-        byte[] responseBodyBytes = responseBody.getBytes(StandardCharsets.UTF_8);
-
         try {
-            exchange.sendResponseHeaders(statusCode.getCode(), responseBodyBytes.length);
+            exchange.sendResponseHeaders(statusCode.getCode(), responseBody.length());
+
             try (OutputStream outputStream = exchange.getResponseBody()) {
-                outputStream.write(responseBodyBytes);
+                outputStream.write(responseBody.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();

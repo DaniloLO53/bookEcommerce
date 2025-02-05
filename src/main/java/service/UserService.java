@@ -35,19 +35,13 @@ public class UserService {
         }
     }
 
-    public static void update(User user, Integer id) {
+    public static User update(User user, Integer id) {
         User userFromDatabase = UserRepository.findById(id);
 
         if (userFromDatabase == null) {
-            System.out.println("No users found with this id");
+            throw new HttpException(HttpStatusCode.NOT_FOUND, "No users found with this id.");
         } else {
-            User newUser = UserRepository.update(user, id);
-
-            if (newUser != null) {
-                System.out.println("New user created: " + user);
-            } else {
-                System.out.println("User is null");
-            }
+            return UserRepository.update(user, id);
         }
     }
 
@@ -55,9 +49,8 @@ public class UserService {
         User user = UserRepository.findById(id);
 
         if (user == null) {
-            System.out.println("No users found with this id");
-        } else {
-            UserRepository.delete(id);
+            throw new HttpException(HttpStatusCode.GONE, "User not found.");
         }
+        UserRepository.delete(id);
     }
 }

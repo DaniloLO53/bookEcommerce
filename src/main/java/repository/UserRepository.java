@@ -43,7 +43,12 @@ public class UserRepository {
     }
 
     public static User update(User user, Integer id) {
-        String query = "UPDATE users SET email = ?, first_name = ?, last_name = ?, password = ? WHERE id = ?";
+        String query = """
+                UPDATE users
+                SET email = ?, first_name = ?, last_name = ?, password = ?
+                WHERE id = ?
+                RETURNING *
+        """;
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);

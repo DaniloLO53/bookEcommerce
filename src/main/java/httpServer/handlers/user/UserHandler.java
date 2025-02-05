@@ -18,14 +18,14 @@ public class UserHandler implements HttpHandler {
             case "POST":
                 UserHandlerPost.handle(exchange, requestPath);
                 break;
-            case "UPDATE":
-                // todo
+            case "PUT":
+                UserHandlerUpdate.handle(exchange, requestPath);
                 break;
             case "DELETE":
-                // todo
+                UserHandlerDelete.handle(exchange, requestPath);
                 break;
             default:
-                System.out.println("Method invalid");
+                System.out.println("Invalid method.");
         }
     }
 }
